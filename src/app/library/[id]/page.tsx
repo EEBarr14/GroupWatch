@@ -5,8 +5,9 @@ import { connection } from "next/server";
 import type { MediaEntry } from "@/lib/library";
 import { genreName, statusClasses } from "@/lib/library";
 import { createClient } from "@/lib/supabase/server";
-import { deleteEntry } from "../actions";
+import { deleteEntry, updateWatchStatus } from "../actions";
 import { DeleteEntryForm } from "../delete-entry-form";
+import { WatchStatusForm } from "../watch-status-form";
 import { DesertLineArt } from "@/components/line-art";
 
 async function EntryDetailContent({
@@ -31,6 +32,7 @@ async function EntryDetailContent({
 
   const entry = data as MediaEntry;
   const deleteAction = deleteEntry.bind(null, entry.id);
+  const statusAction = updateWatchStatus.bind(null, entry.id);
 
   return (
     <section className="mx-auto max-w-4xl">
@@ -88,6 +90,11 @@ async function EntryDetailContent({
               </dd>
             </div>
           </dl>
+
+          <WatchStatusForm
+            action={statusAction}
+            currentStatus={entry.watch_status}
+          />
 
           {query.deleteError === "1" && (
             <p

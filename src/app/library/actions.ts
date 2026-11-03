@@ -7,6 +7,7 @@ import {
   streamingServices,
   watchStatuses,
 } from "@/lib/library";
+import type { WatchStatus } from "@/lib/library";
 import { createClient } from "@/lib/supabase/server";
 
 export type EntryActionState = {
@@ -25,6 +26,12 @@ export type EntryActionState = {
     watchStatus?: string;
     streamingService?: string;
   };
+};
+
+export type WatchStatusActionState = {
+  error?: string;
+  message?: string;
+  updatedStatus?: WatchStatus;
 };
 
 function readEntry(formData: FormData) {
@@ -147,6 +154,40 @@ export async function updateEntry(
   revalidatePath("/library");
   revalidatePath(`/library/${entryId}`);
   redirect(`/library/${entryId}`);
+}
+
+export async function updateWatchStatus(
+  entryId: string,
+  _previousState: WatchStatusActionState,
+  formData: FormData,
+): Promise<WatchStatusActionState> {
+  const watchStatus = String(formData.get("watchStatus") ?? "");
+
+  if (!watchStatuses.includes(watchStatus as WatchStatus)) {
+    return { error: "Choose a valid watch status and try again." };
+  }
+
+  const { supabase, userId } = await requireUser();
+  const { data, error } = await supabase
+    .from("media_entries")
+    .update({ watch_status: watchStatus })
+    .eq("id", entryId)
+    .eq("user_id", userId)
+    .select("id")
+    .maybeSingle();
+
+  if (error || !data) {
+    return { error: "I couldn't update the watch status. Please try again." };
+  }
+
+  revalidatePath("/library");
+  revalidatePath(`/library/${entryId}`);
+  revalidatePath("/dashboard");
+
+  return {
+    message: `Moved to ${watchStatus}.`,
+    updatedStatus: watchStatus as WatchStatus,
+  };
 }
 
 export async function deleteEntry(entryId: string, formData: FormData) {
