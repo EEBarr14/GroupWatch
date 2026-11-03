@@ -32,31 +32,40 @@ export async function LibraryShell({ children }: { children: React.ReactNode }) 
 
       <header className="relative border-b border-[#fff1d6]/15 bg-[#2d1b3d]/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-8">
-          <div className="flex items-center gap-5 sm:gap-8">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3 sm:gap-8">
             <Link
               href="/library"
               className="text-sm font-black uppercase tracking-[0.24em] text-[#f6c85f]"
             >
               GroupWatch
             </Link>
-            <nav aria-label="Main navigation" className="flex items-center gap-1">
+            <nav
+              aria-label="Main navigation"
+              className="flex flex-wrap items-center gap-1"
+            >
               <Link
                 href="/library"
-                className="rounded-full px-4 py-2 text-sm font-bold text-[#fff1d6] transition hover:bg-[#fff1d6]/10"
+                className="rounded-full px-3 py-2 text-sm font-bold text-[#fff1d6] transition hover:bg-[#fff1d6]/10 sm:px-4"
               >
                 Library
               </Link>
               <Link
                 href="/library/new"
-                className="rounded-full px-4 py-2 text-sm font-bold text-[#fff1d6] transition hover:bg-[#fff1d6]/10"
+                className="rounded-full px-3 py-2 text-sm font-bold text-[#fff1d6] transition hover:bg-[#fff1d6]/10 sm:px-4"
               >
                 Add a title
               </Link>
               <Link
                 href="/library/starred"
-                className="rounded-full px-4 py-2 text-sm font-bold text-[#fff1d6] transition hover:bg-[#fff1d6]/10"
+                className="rounded-full px-3 py-2 text-sm font-bold text-[#fff1d6] transition hover:bg-[#fff1d6]/10 sm:px-4"
               >
                 Starred
+              </Link>
+              <Link
+                href="/dashboard"
+                className="rounded-full px-3 py-2 text-sm font-bold text-[#fff1d6] transition hover:bg-[#fff1d6]/10 sm:px-4"
+              >
+                Dashboard
               </Link>
             </nav>
           </div>

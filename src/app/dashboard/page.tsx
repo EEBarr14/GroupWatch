@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { DashboardContent } from "./dashboard-content";
+import { LibraryShell } from "@/app/library/library-shell";
 
 export default function DashboardPage() {
   return (
@@ -10,7 +11,9 @@ export default function DashboardPage() {
         </main>
       }
     >
-      <DashboardContent />
+      <LibraryShell>
+        <DashboardContent />
+      </LibraryShell>
     </Suspense>
   );
 }
