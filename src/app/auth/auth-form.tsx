@@ -4,10 +4,17 @@ import Link from "next/link";
 import { useActionState } from "react";
 import type { AuthState } from "./actions";
 import { logIn, signUp } from "./actions";
+import { WatchPartyLineArt } from "@/components/line-art";
 
 const initialState: AuthState = {};
 
-export function AuthForm({ mode }: { mode: "login" | "signup" }) {
+export function AuthForm({
+  mode,
+  passwordReset = false,
+}: {
+  mode: "login" | "signup";
+  passwordReset?: boolean;
+}) {
   const isLogin = mode === "login";
   const action = isLogin ? logIn : signUp;
   const [state, formAction, isPending] = useActionState(action, initialState);
@@ -30,12 +37,24 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
               ? "Log in to get back to the shows and movies you have been tracking."
               : "Create an account so your watchlist stays connected to you."}
           </p>
+          <WatchPartyLineArt
+            className="mt-8 w-full text-[#fff1d6]/85"
+            accent="#f6c85f"
+          />
         </section>
 
         <section className="p-8 text-[#261b2a] sm:p-12">
           <h2 className="text-3xl font-semibold">
             {isLogin ? "Log in" : "Create an account"}
           </h2>
+          {passwordReset && (
+            <p
+              role="status"
+              className="mt-5 rounded-xl border border-[#6e3b5d]/25 bg-[#6e3b5d]/10 px-4 py-3 text-sm font-semibold text-[#492740]"
+            >
+              Your password is updated. Log in with the new one.
+            </p>
+          )}
           <form action={formAction} className="mt-8 space-y-6">
             <label className="block">
               <span className="mb-2 block text-sm font-bold">Email</span>
@@ -58,6 +77,14 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
                 aria-describedby={!isLogin ? "password-help" : undefined}
                 className="w-full rounded-xl border border-[#6e3b5d]/25 bg-white px-4 py-3.5 text-base shadow-sm"
               />
+              {isLogin && (
+                <Link
+                  href="/forgot-password"
+                  className="mt-3 inline-block text-sm font-bold text-[#6e3b5d] underline decoration-[#f29e4c] decoration-2 underline-offset-4"
+                >
+                  Forgot your password?
+                </Link>
+              )}
               {!isLogin && (
                 <span id="password-help" className="mt-2 block text-sm text-[#6e3b5d]">
                   Use at least 8 characters.
