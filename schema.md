@@ -76,4 +76,10 @@ Row Level Security is enabled on every table.
 - Signed-in users can read the shared genre list.
 - Signed-out visitors cannot read these private tables.
 
-Public sharing stays off by default. The later share-page feature will add a narrow read-only policy for fields that are safe to show.
+Public sharing stays off by default. Signed-out visitors can reach only the narrow database function described below, not the private tables.
+
+## Public watchlist function
+
+`get_public_watchlist(link name)` is the only database entry point available to signed-out visitors. It returns one JSON object only when the matching profile has sharing turned on. That object contains the public display name plus each title's media type, watch status, rating, and genre.
+
+The function does not return emails, reviews, dates, streaming services, stars, editing controls, or account IDs. The private tables still have no anonymous read permission, so a visitor cannot use the public link to query other columns.
