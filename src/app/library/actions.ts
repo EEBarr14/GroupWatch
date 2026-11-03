@@ -18,6 +18,8 @@ export type EntryActionState = {
     genreId: string;
     watchStatus: string;
     streamingService: string;
+    rating: string;
+    review: string;
   };
   errors?: {
     title?: string;
@@ -25,6 +27,8 @@ export type EntryActionState = {
     genreId?: string;
     watchStatus?: string;
     streamingService?: string;
+    rating?: string;
+    review?: string;
   };
 };
 
@@ -39,6 +43,9 @@ function readEntry(formData: FormData) {
   const mediaType = String(formData.get("mediaType") ?? "");
   const watchStatus = String(formData.get("watchStatus") ?? "");
   const streamingService = String(formData.get("streamingService") ?? "");
+  const ratingValue = String(formData.get("rating") ?? "");
+  const rating = ratingValue ? Number(ratingValue) : null;
+  const review = String(formData.get("review") ?? "").trim();
   const genreIdValue = String(formData.get("genreId") ?? "");
   const genreId = Number(genreIdValue);
   const values = {
@@ -47,6 +54,8 @@ function readEntry(formData: FormData) {
     genreId: genreIdValue,
     watchStatus,
     streamingService,
+    rating: ratingValue,
+    review,
   };
   const errors: NonNullable<EntryActionState["errors"]> = {};
 
@@ -77,6 +86,14 @@ function readEntry(formData: FormData) {
     errors.streamingService = "Choose a streaming service from the list.";
   }
 
+  if (rating !== null && (!Number.isInteger(rating) || rating < 1 || rating > 5)) {
+    errors.rating = "Choose a rating from one through five TVs.";
+  }
+
+  if (review.length > 500) {
+    errors.review = "Keep your review to 500 characters or fewer.";
+  }
+
   if (Object.keys(errors).length > 0) {
     return { errors, values } as const;
   }
@@ -86,6 +103,8 @@ function readEntry(formData: FormData) {
     media_type: mediaType as (typeof mediaTypes)[number],
     watch_status: watchStatus as (typeof watchStatuses)[number],
     streaming_service: streamingService || null,
+    rating,
+    review: review || null,
     genre_id: genreId,
   } as const;
 }

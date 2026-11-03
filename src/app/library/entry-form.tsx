@@ -5,6 +5,7 @@ import { useActionState } from "react";
 import type { Genre, MediaEntry } from "@/lib/library";
 import { mediaTypes, streamingServices, watchStatuses } from "@/lib/library";
 import type { EntryActionState } from "./actions";
+import { TvRatingInput } from "@/components/tv-rating";
 
 type EntryAction = (
   state: EntryActionState,
@@ -180,6 +181,37 @@ export function EntryForm({
           </p>
         )}
       </fieldset>
+
+      <div className="grid gap-6 border-t border-[#6e3b5d]/15 pt-6 sm:grid-cols-[0.8fr_1.2fr]">
+        <TvRatingInput
+          initialValue={Number(state.values?.rating ?? entry?.rating ?? 0)}
+          error={state.errors?.rating}
+        />
+
+        <label className="block">
+          <span className="mb-1 block text-sm font-bold text-[#492740]">
+            My review
+          </span>
+          <span id="review-help" className="mb-3 block text-sm text-[#6e3b5d]">
+            Optional—save the thought you want to remember.
+          </span>
+          <textarea
+            name="review"
+            defaultValue={state.values?.review ?? entry?.review ?? ""}
+            maxLength={500}
+            rows={5}
+            placeholder="What worked, what didn't, or who would love this?"
+            aria-invalid={Boolean(state.errors?.review)}
+            aria-describedby={state.errors?.review ? "review-error" : "review-help"}
+            className={`w-full resize-y rounded-2xl border bg-white px-4 py-3.5 text-base text-[#261b2a] shadow-sm placeholder:text-[#6e3b5d]/45 ${state.errors?.review ? "border-[#d65a4a] ring-2 ring-[#d65a4a]/15" : "border-[#6e3b5d]/20"}`}
+          />
+          {state.errors?.review && (
+            <span id="review-error" className="mt-2 block text-sm font-semibold text-[#8b3028]">
+              {state.errors.review}
+            </span>
+          )}
+        </label>
+      </div>
 
       {state.error && (
         <p

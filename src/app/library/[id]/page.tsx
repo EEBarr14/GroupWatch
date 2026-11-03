@@ -9,6 +9,7 @@ import { deleteEntry, updateWatchStatus } from "../actions";
 import { DeleteEntryForm } from "../delete-entry-form";
 import { WatchStatusForm } from "../watch-status-form";
 import { DesertLineArt } from "@/components/line-art";
+import { TvRatingDisplay } from "@/components/tv-rating";
 
 async function EntryDetailContent({
   params,
@@ -21,7 +22,7 @@ async function EntryDetailContent({
   const { data } = await supabase
     .from("media_entries")
     .select(
-      "id, title, media_type, watch_status, streaming_service, genre_id, created_at, updated_at, genres(name)",
+      "id, title, media_type, watch_status, streaming_service, rating, review, genre_id, created_at, updated_at, genres(name)",
     )
     .eq("id", id)
     .maybeSingle();
@@ -90,6 +91,28 @@ async function EntryDetailContent({
               </dd>
             </div>
           </dl>
+
+          <section
+            aria-labelledby="my-take-heading"
+            className="mt-8 rounded-[1.5rem] bg-[#6e3b5d]/7 p-5 sm:p-6"
+          >
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#d65a4a]">
+              My take
+            </p>
+            <h2 id="my-take-heading" className="mt-2 text-2xl font-semibold">
+              What I thought
+            </h2>
+            <div className="mt-4 text-[#d65a4a]">
+              {entry.rating ? (
+                <TvRatingDisplay rating={entry.rating} />
+              ) : (
+                <p className="text-sm font-semibold text-[#6e3b5d]">Not rated yet</p>
+              )}
+            </div>
+            <p className="mt-4 whitespace-pre-wrap leading-7 text-[#492740]">
+              {entry.review || "No review yet. Add one whenever you have a thought worth keeping."}
+            </p>
+          </section>
 
           <WatchStatusForm
             action={statusAction}
