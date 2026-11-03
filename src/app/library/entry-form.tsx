@@ -24,20 +24,46 @@ export function EntryForm({
 }) {
   const [state, formAction, isPending] = useActionState(action, initialState);
   const cancelHref = entry ? `/library/${entry.id}` : "/library";
+  const formKey = state.values ? JSON.stringify(state.values) : "initial";
+  const hasFieldErrors = Boolean(
+    state.errors && Object.keys(state.errors).length > 0,
+  );
 
   return (
-    <form action={formAction} className="mt-8 space-y-6">
+    <form
+      key={formKey}
+      action={formAction}
+      noValidate
+      className="mt-8 space-y-6"
+    >
+      {hasFieldErrors && (
+        <div
+          role="alert"
+          className="rounded-2xl border border-[#d65a4a]/30 bg-[#d65a4a]/10 px-4 py-3 text-sm text-[#8b3028]"
+        >
+          <p className="font-bold">A few details still need your attention.</p>
+          <p className="mt-1">Your other answers are still here—just fix the fields marked below.</p>
+        </div>
+      )}
+
       <label className="block">
         <span className="mb-2 block text-sm font-bold text-[#492740]">Title</span>
         <input
           name="title"
-          defaultValue={entry?.title}
+          defaultValue={state.values?.title ?? entry?.title}
           maxLength={200}
           required
           autoFocus
           placeholder="What are you watching?"
-          className="w-full rounded-2xl border border-[#6e3b5d]/20 bg-white px-4 py-3.5 text-base text-[#261b2a] shadow-sm placeholder:text-[#6e3b5d]/45"
+          aria-invalid={Boolean(state.errors?.title)}
+          aria-describedby={state.errors?.title ? "title-error" : undefined}
+          className={`w-full rounded-2xl border bg-white px-4 py-3.5 text-base text-[#261b2a] shadow-sm placeholder:text-[#6e3b5d]/45 ${state.errors?.title ? "border-[#d65a4a] ring-2 ring-[#d65a4a]/15" : "border-[#6e3b5d]/20"}`}
         />
+        {state.errors?.title && (
+          <span id="title-error" className="mt-2 block text-sm font-semibold text-[#8b3028]">
+            {state.errors.title}
+          </span>
+        )}
       </label>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -47,9 +73,11 @@ export function EntryForm({
           </span>
           <select
             name="mediaType"
-            defaultValue={entry?.media_type ?? ""}
+            defaultValue={state.values?.mediaType ?? entry?.media_type ?? ""}
             required
-            className="w-full rounded-2xl border border-[#6e3b5d]/20 bg-white px-4 py-3.5 text-base text-[#261b2a] shadow-sm"
+            aria-invalid={Boolean(state.errors?.mediaType)}
+            aria-describedby={state.errors?.mediaType ? "media-type-error" : undefined}
+            className={`w-full rounded-2xl border bg-white px-4 py-3.5 text-base text-[#261b2a] shadow-sm ${state.errors?.mediaType ? "border-[#d65a4a] ring-2 ring-[#d65a4a]/15" : "border-[#6e3b5d]/20"}`}
           >
             <option value="" disabled>
               Choose a type
@@ -58,6 +86,11 @@ export function EntryForm({
               <option key={type}>{type}</option>
             ))}
           </select>
+          {state.errors?.mediaType && (
+            <span id="media-type-error" className="mt-2 block text-sm font-semibold text-[#8b3028]">
+              {state.errors.mediaType}
+            </span>
+          )}
         </label>
 
         <label className="block">
@@ -66,9 +99,11 @@ export function EntryForm({
           </span>
           <select
             name="genreId"
-            defaultValue={entry?.genre_id ?? ""}
+            defaultValue={state.values?.genreId ?? entry?.genre_id ?? ""}
             required
-            className="w-full rounded-2xl border border-[#6e3b5d]/20 bg-white px-4 py-3.5 text-base text-[#261b2a] shadow-sm"
+            aria-invalid={Boolean(state.errors?.genreId)}
+            aria-describedby={state.errors?.genreId ? "genre-error" : undefined}
+            className={`w-full rounded-2xl border bg-white px-4 py-3.5 text-base text-[#261b2a] shadow-sm ${state.errors?.genreId ? "border-[#d65a4a] ring-2 ring-[#d65a4a]/15" : "border-[#6e3b5d]/20"}`}
           >
             <option value="" disabled>
               Choose a genre
@@ -79,6 +114,11 @@ export function EntryForm({
               </option>
             ))}
           </select>
+          {state.errors?.genreId && (
+            <span id="genre-error" className="mt-2 block text-sm font-semibold text-[#8b3028]">
+              {state.errors.genreId}
+            </span>
+          )}
         </label>
 
         <label className="block sm:col-span-2 lg:col-span-1">
@@ -87,18 +127,30 @@ export function EntryForm({
           </span>
           <select
             name="streamingService"
-            defaultValue={entry?.streaming_service ?? ""}
-            className="w-full rounded-2xl border border-[#6e3b5d]/20 bg-white px-4 py-3.5 text-base text-[#261b2a] shadow-sm"
+            defaultValue={
+              state.values?.streamingService ?? entry?.streaming_service ?? ""
+            }
+            aria-invalid={Boolean(state.errors?.streamingService)}
+            aria-describedby={state.errors?.streamingService ? "streaming-service-error" : undefined}
+            className={`w-full rounded-2xl border bg-white px-4 py-3.5 text-base text-[#261b2a] shadow-sm ${state.errors?.streamingService ? "border-[#d65a4a] ring-2 ring-[#d65a4a]/15" : "border-[#6e3b5d]/20"}`}
           >
             <option value="">Not sure yet</option>
             {streamingServices.map((service) => (
               <option key={service}>{service}</option>
             ))}
           </select>
+          {state.errors?.streamingService && (
+            <span id="streaming-service-error" className="mt-2 block text-sm font-semibold text-[#8b3028]">
+              {state.errors.streamingService}
+            </span>
+          )}
         </label>
       </div>
 
-      <fieldset>
+      <fieldset
+        aria-invalid={Boolean(state.errors?.watchStatus)}
+        aria-describedby={state.errors?.watchStatus ? "watch-status-error" : undefined}
+      >
         <legend className="text-sm font-bold text-[#492740]">
           Watch status
         </legend>
@@ -112,7 +164,9 @@ export function EntryForm({
                 type="radio"
                 name="watchStatus"
                 value={status}
-                defaultChecked={entry?.watch_status === status}
+                defaultChecked={
+                  (state.values?.watchStatus ?? entry?.watch_status) === status
+                }
                 required
                 className="accent-[#d65a4a]"
               />
@@ -120,6 +174,11 @@ export function EntryForm({
             </label>
           ))}
         </div>
+        {state.errors?.watchStatus && (
+          <p id="watch-status-error" className="mt-2 text-sm font-semibold text-[#8b3028]">
+            {state.errors.watchStatus}
+          </p>
+        )}
       </fieldset>
 
       {state.error && (

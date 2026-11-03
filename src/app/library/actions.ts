@@ -11,6 +11,20 @@ import { createClient } from "@/lib/supabase/server";
 
 export type EntryActionState = {
   error?: string;
+  values?: {
+    title: string;
+    mediaType: string;
+    genreId: string;
+    watchStatus: string;
+    streamingService: string;
+  };
+  errors?: {
+    title?: string;
+    mediaType?: string;
+    genreId?: string;
+    watchStatus?: string;
+    streamingService?: string;
+  };
 };
 
 function readEntry(formData: FormData) {
@@ -18,18 +32,33 @@ function readEntry(formData: FormData) {
   const mediaType = String(formData.get("mediaType") ?? "");
   const watchStatus = String(formData.get("watchStatus") ?? "");
   const streamingService = String(formData.get("streamingService") ?? "");
-  const genreId = Number(formData.get("genreId"));
+  const genreIdValue = String(formData.get("genreId") ?? "");
+  const genreId = Number(genreIdValue);
+  const values = {
+    title,
+    mediaType,
+    genreId: genreIdValue,
+    watchStatus,
+    streamingService,
+  };
+  const errors: NonNullable<EntryActionState["errors"]> = {};
 
-  if (
-    !title ||
-    !mediaTypes.includes(mediaType as (typeof mediaTypes)[number]) ||
-    !watchStatuses.includes(watchStatus as (typeof watchStatuses)[number]) ||
-    !Number.isInteger(genreId) ||
-    genreId < 1
-  ) {
-    return {
-      error: "Please fill in the title, type, genre, and watch status.",
-    } as const;
+  if (!title) {
+    errors.title = "Add the title of the movie or TV show.";
+  } else if (title.length > 200) {
+    errors.title = "Keep the title to 200 characters or fewer.";
+  }
+
+  if (!mediaTypes.includes(mediaType as (typeof mediaTypes)[number])) {
+    errors.mediaType = "Choose Movie or TV Show.";
+  }
+
+  if (!Number.isInteger(genreId) || genreId < 1) {
+    errors.genreId = "Choose the genre that fits best.";
+  }
+
+  if (!watchStatuses.includes(watchStatus as (typeof watchStatuses)[number])) {
+    errors.watchStatus = "Choose where this title is in your watch journey.";
   }
 
   if (
@@ -38,7 +67,11 @@ function readEntry(formData: FormData) {
       streamingService as (typeof streamingServices)[number],
     )
   ) {
-    return { error: "Please choose a valid streaming service." } as const;
+    errors.streamingService = "Choose a streaming service from the list.";
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return { errors, values } as const;
   }
 
   return {
@@ -68,8 +101,8 @@ export async function createEntry(
 ): Promise<EntryActionState> {
   const entry = readEntry(formData);
 
-  if ("error" in entry) {
-    return { error: entry.error };
+  if ("errors" in entry) {
+    return { errors: entry.errors, values: entry.values };
   }
 
   const { supabase, userId } = await requireUser();
@@ -94,8 +127,8 @@ export async function updateEntry(
 ): Promise<EntryActionState> {
   const entry = readEntry(formData);
 
-  if ("error" in entry) {
-    return { error: entry.error };
+  if ("errors" in entry) {
+    return { errors: entry.errors, values: entry.values };
   }
 
   const { supabase, userId } = await requireUser();
