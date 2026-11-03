@@ -5,6 +5,7 @@ import { useActionState } from "react";
 import type { AuthState } from "./actions";
 import { logIn, signUp } from "./actions";
 import { WatchPartyLineArt } from "@/components/line-art";
+import { PasswordField } from "@/components/password-field";
 
 const initialState: AuthState = {};
 
@@ -66,16 +67,14 @@ export function AuthForm({
                 className="w-full rounded-xl border border-[#6e3b5d]/25 bg-white px-4 py-3.5 text-base shadow-sm"
               />
             </label>
-            <label className="block">
-              <span className="mb-2 block text-sm font-bold">Password</span>
-              <input
+            <div>
+              <PasswordField
                 name="password"
-                type="password"
+                label="Password"
                 autoComplete={isLogin ? "current-password" : "new-password"}
                 minLength={8}
                 required
-                aria-describedby={!isLogin ? "password-help" : undefined}
-                className="w-full rounded-xl border border-[#6e3b5d]/25 bg-white px-4 py-3.5 text-base shadow-sm"
+                helpText={!isLogin ? "Use at least 8 characters." : undefined}
               />
               {isLogin && (
                 <Link
@@ -85,12 +84,7 @@ export function AuthForm({
                   Forgot your password?
                 </Link>
               )}
-              {!isLogin && (
-                <span id="password-help" className="mt-2 block text-sm text-[#6e3b5d]">
-                  Use at least 8 characters.
-                </span>
-              )}
-            </label>
+            </div>
 
             {state.error && (
               <p

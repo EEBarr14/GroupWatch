@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { DesertLineArt } from "@/components/line-art";
+import { PasswordField } from "@/components/password-field";
 import { updatePassword, type UpdatePasswordState } from "./actions";
 
 const initialState: UpdatePasswordState = {};
@@ -30,36 +31,23 @@ export function UpdatePasswordForm() {
       />
 
       <form action={formAction} className="mt-5 space-y-6">
-        <label className="block">
-          <span className="mb-2 block text-sm font-bold">New password</span>
-          <input
-            name="password"
-            type="password"
-            autoComplete="new-password"
-            minLength={8}
-            required
-            autoFocus
-            aria-describedby="new-password-help"
-            className="w-full rounded-xl border border-[#6e3b5d]/25 bg-white px-4 py-3.5 text-base shadow-sm"
-          />
-          <span id="new-password-help" className="mt-2 block text-sm text-[#6e3b5d]">
-            Use at least 8 characters.
-          </span>
-        </label>
+        <PasswordField
+          name="password"
+          label="New password"
+          autoComplete="new-password"
+          minLength={8}
+          required
+          autoFocus
+          helpText="Use at least 8 characters."
+        />
 
-        <label className="block">
-          <span className="mb-2 block text-sm font-bold">
-            Confirm new password
-          </span>
-          <input
-            name="passwordConfirmation"
-            type="password"
-            autoComplete="new-password"
-            minLength={8}
-            required
-            className="w-full rounded-xl border border-[#6e3b5d]/25 bg-white px-4 py-3.5 text-base shadow-sm"
-          />
-        </label>
+        <PasswordField
+          name="passwordConfirmation"
+          label="Confirm new password"
+          autoComplete="new-password"
+          minLength={8}
+          required
+        />
 
         {state.error && (
           <p
