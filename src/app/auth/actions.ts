@@ -56,7 +56,7 @@ export async function signUp(
   }
 
   if (hasSession) {
-    redirect("/dashboard");
+    redirect("/library");
   }
 
   return {
@@ -84,7 +84,7 @@ export async function logIn(
     return { error: "I couldn't log you in right now. Please try again." };
   }
 
-  redirect("/dashboard");
+  redirect("/library");
 }
 
 export async function logOut() {

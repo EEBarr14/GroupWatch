@@ -46,6 +46,7 @@ This holds each movie or TV show in one user's library.
 | `title` | Text | Required title, up to 200 characters |
 | `media_type` | Text | Required; Movie or TV Show |
 | `watch_status` | Text | Required; Want to Watch, Watching, or Watched |
+| `streaming_service` | Text | Optional; where I am watching it, such as Netflix or Hulu |
 | `rating` | Number | Optional whole number from 1 through 5 |
 | `review` | Text | Optional, up to 500 characters |
 | `started_on` | Date | Optional start date |

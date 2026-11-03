@@ -6,7 +6,7 @@ Live app: [group-watch-beta.vercel.app](https://group-watch-beta.vercel.app)
 
 ## What works right now
 
-Account access is working: a visitor can sign up with an email and password, log in, reach a protected starting page, and log out. The project also includes the versioned database foundation for account-owned profiles, genres, media entries, and stars. The library interface itself is not built yet.
+Account access is working: a visitor can sign up with an email and password, log in, reset a forgotten password, and log out. A signed-in user can also add, view, edit, and delete movies and shows in a private library. Supabase keeps each account's entries separate with Row Level Security. I am still building ratings, stars, search, the dashboard, and sharing one pull request at a time.
 
 ## Tools I'm using
 

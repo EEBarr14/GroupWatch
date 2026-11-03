@@ -144,3 +144,5 @@ I will complete this table after the application is built without rewriting the 
 | Find and sort | To be completed | Backlogged | To be completed | To be completed |
 | Dashboard | To be completed | Backlogged | To be completed | To be completed |
 | Public share page | To be completed | Backlogged | To be completed | To be completed |
+
+Reflection note for Library CRUD: I considered pulling poster artwork automatically, but that would require an outside movie database, API credentials, title matching, and attribution. I kept the text-based cards from my original scope instead. This is one place where the finished app will feel less visual than I first imagined, but it avoids adding a fragile dependency before the required features are complete.
