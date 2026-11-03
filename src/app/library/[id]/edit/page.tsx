@@ -18,7 +18,7 @@ async function EditEntryContent({
     supabase
       .from("media_entries")
       .select(
-        "id, title, media_type, watch_status, streaming_service, genre_id, created_at, updated_at, genres(name)",
+        "id, title, media_type, watch_status, streaming_service, rating, review, genre_id, created_at, updated_at, genres(name)",
       )
       .eq("id", id)
       .maybeSingle(),

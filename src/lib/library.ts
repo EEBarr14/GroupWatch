@@ -29,6 +29,8 @@ export type MediaEntry = {
   media_type: MediaType;
   watch_status: WatchStatus;
   streaming_service: StreamingService | null;
+  rating: number | null;
+  review: string | null;
   genre_id: number;
   created_at: string;
   updated_at: string;

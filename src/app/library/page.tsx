@@ -5,6 +5,7 @@ import type { MediaEntry } from "@/lib/library";
 import { genreName, statusClasses } from "@/lib/library";
 import { createClient } from "@/lib/supabase/server";
 import { WatchPartyLineArt } from "@/components/line-art";
+import { TvRatingDisplay } from "@/components/tv-rating";
 
 async function LibraryContent() {
   await connection();
@@ -12,7 +13,7 @@ async function LibraryContent() {
   const { data } = await supabase
     .from("media_entries")
     .select(
-      "id, title, media_type, watch_status, streaming_service, genre_id, created_at, updated_at, genres(name)",
+      "id, title, media_type, watch_status, streaming_service, rating, review, genre_id, created_at, updated_at, genres(name)",
     )
     .order("created_at", { ascending: false });
   const entries = (data ?? []) as MediaEntry[];
@@ -103,6 +104,11 @@ async function LibraryContent() {
                   <p className="mt-2 text-sm text-[#6e3b5d]/75">
                     Watching on {entry.streaming_service}
                   </p>
+                )}
+                {entry.rating && (
+                  <div className="mt-4 text-[#d65a4a]">
+                    <TvRatingDisplay rating={entry.rating} compact />
+                  </div>
                 )}
               </div>
               <p className="text-sm font-bold text-[#d65a4a]">
