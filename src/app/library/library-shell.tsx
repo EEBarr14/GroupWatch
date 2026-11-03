@@ -67,6 +67,12 @@ export async function LibraryShell({ children }: { children: React.ReactNode }) 
               >
                 Dashboard
               </Link>
+              <Link
+                href="/library/share"
+                className="rounded-full px-3 py-2 text-sm font-bold text-[#fff1d6] transition hover:bg-[#fff1d6]/10 sm:px-4"
+              >
+                Share
+              </Link>
             </nav>
           </div>
 
