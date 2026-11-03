@@ -6,7 +6,7 @@ Live app: [group-watch-beta.vercel.app](https://group-watch-beta.vercel.app)
 
 ## What works right now
 
-Account access is working: a visitor can sign up with an email and password, log in, reset a forgotten password, and log out. A signed-in user can also add, view, edit, and delete movies and shows in a private library. Supabase keeps each account's entries separate with Row Level Security. I am still building ratings, stars, search, the dashboard, and sharing one pull request at a time.
+Account access is working: a visitor can sign up with an email and password, log in, reset a forgotten password, and log out. A signed-in user can add, view, edit, and delete movies and shows in a private library, update watch status, save ratings and reviews, and star favorites. Supabase keeps each account's entries separate with Row Level Security. I am still building search, the dashboard, and sharing one pull request at a time.
 
 ## Tools I'm using
 

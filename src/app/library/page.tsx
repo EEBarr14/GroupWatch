@@ -2,21 +2,24 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { connection } from "next/server";
 import type { MediaEntry } from "@/lib/library";
-import { genreName, statusClasses } from "@/lib/library";
 import { createClient } from "@/lib/supabase/server";
 import { WatchPartyLineArt } from "@/components/line-art";
-import { TvRatingDisplay } from "@/components/tv-rating";
+import { LibraryCard } from "./library-card";
 
 async function LibraryContent() {
   await connection();
   const supabase = await createClient();
-  const { data } = await supabase
-    .from("media_entries")
-    .select(
-      "id, title, media_type, watch_status, streaming_service, rating, review, genre_id, created_at, updated_at, genres(name)",
-    )
-    .order("created_at", { ascending: false });
+  const [{ data }, { data: stars }] = await Promise.all([
+    supabase
+      .from("media_entries")
+      .select(
+        "id, title, media_type, watch_status, streaming_service, rating, review, genre_id, created_at, updated_at, genres(name)",
+      )
+      .order("created_at", { ascending: false }),
+    supabase.from("stars").select("media_entry_id"),
+  ]);
   const entries = (data ?? []) as MediaEntry[];
+  const starredIds = new Set((stars ?? []).map((star) => star.media_entry_id));
 
   return (
     <>
@@ -78,43 +81,11 @@ async function LibraryContent() {
           className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3"
         >
           {entries.map((entry) => (
-            <Link
+            <LibraryCard
               key={entry.id}
-              href={`/library/${entry.id}`}
-              className="group flex min-h-64 flex-col rounded-[1.75rem] border border-[#fff1d6]/20 bg-[#fff1d6] p-6 text-[#261b2a] shadow-xl transition hover:-translate-y-1 hover:shadow-2xl"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <span className="rounded-full bg-[#6e3b5d]/10 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-[#6e3b5d]">
-                  {entry.media_type}
-                </span>
-                <span
-                  className={`rounded-full px-3 py-1 text-xs font-bold ${statusClasses(entry.watch_status)}`}
-                >
-                  {entry.watch_status}
-                </span>
-              </div>
-              <div className="my-auto py-8">
-                <h2 className="text-2xl font-semibold leading-tight transition group-hover:text-[#d65a4a]">
-                  {entry.title}
-                </h2>
-                <p className="mt-3 text-sm font-semibold text-[#6e3b5d]">
-                  {genreName(entry)}
-                </p>
-                {entry.streaming_service && (
-                  <p className="mt-2 text-sm text-[#6e3b5d]/75">
-                    Watching on {entry.streaming_service}
-                  </p>
-                )}
-                {entry.rating && (
-                  <div className="mt-4 text-[#d65a4a]">
-                    <TvRatingDisplay rating={entry.rating} compact />
-                  </div>
-                )}
-              </div>
-              <p className="text-sm font-bold text-[#d65a4a]">
-                Open details <span aria-hidden="true">→</span>
-              </p>
-            </Link>
+              entry={entry}
+              isStarred={starredIds.has(entry.id)}
+            />
           ))}
         </section>
       )}
