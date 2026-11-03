@@ -2,16 +2,18 @@
 
 I'm building GroupWatch as a Goodreads-style tracker for TV shows and movies. I want one place to remember what I'm watching, what I want to watch next, and what I thought after I finished something. The longer-term goal is to let friends see a simple version of that list too.
 
+Live app: [group-watch-beta.vercel.app](https://group-watch-beta.vercel.app)
+
 ## What works right now
 
-This branch adds the first real feature: account access. A visitor can sign up with an email and password, log in, reach a protected starting page, and log out. The watchlist itself comes next.
+Account access is working: a visitor can sign up with an email and password, log in, reach a protected starting page, and log out. The project also includes the versioned database foundation for account-owned profiles, genres, media entries, and stars. The library interface itself is not built yet.
 
 ## Tools I'm using
 
 - Next.js and TypeScript for the app
 - Tailwind CSS for the design
-- Supabase for account authentication and, next, the database
-- Vercel for hosting once the first feature is ready to deploy
+- Supabase for account authentication and the database
+- Vercel for hosting the live app
 
 ## Run it locally
 
@@ -33,4 +35,4 @@ npm run dev
 
 ## Project status
 
-The full project plan is in [PLAN.md](./PLAN.md). The live URL will be added here after the app is connected to Vercel.
+The full project plan is in [PLAN.md](./PLAN.md). The database tables and relationships are documented in [schema.md](./schema.md).
