@@ -38,6 +38,12 @@ export type WatchStatusActionState = {
   updatedStatus?: WatchStatus;
 };
 
+export type StarActionState = {
+  error?: string;
+  message?: string;
+  isStarred?: boolean;
+};
+
 function readEntry(formData: FormData) {
   const title = String(formData.get("title") ?? "").trim();
   const mediaType = String(formData.get("mediaType") ?? "");
@@ -206,6 +212,75 @@ export async function updateWatchStatus(
   return {
     message: `Moved to ${watchStatus}.`,
     updatedStatus: watchStatus as WatchStatus,
+  };
+}
+
+export async function updateStar(
+  entryId: string,
+  _previousState: StarActionState,
+  formData: FormData,
+): Promise<StarActionState> {
+  const starredValue = String(formData.get("starred") ?? "");
+
+  if (starredValue !== "true" && starredValue !== "false") {
+    return { error: "Choose whether to star or unstar this title." };
+  }
+
+  const shouldStar = starredValue === "true";
+  const { supabase, userId } = await requireUser();
+  const [{ data: entry, error: entryError }, { data: existingStar }] =
+    await Promise.all([
+      supabase
+        .from("media_entries")
+        .select("id")
+        .eq("id", entryId)
+        .eq("user_id", userId)
+        .maybeSingle(),
+      supabase
+        .from("stars")
+        .select("media_entry_id")
+        .eq("user_id", userId)
+        .eq("media_entry_id", entryId)
+        .maybeSingle(),
+    ]);
+
+  if (entryError || !entry) {
+    return { error: "I couldn't find that title in your library." };
+  }
+
+  if (shouldStar === Boolean(existingStar)) {
+    return {
+      isStarred: shouldStar,
+      message: shouldStar
+        ? "Already in your starred titles."
+        : "Already removed from your starred titles.",
+    };
+  }
+
+  const query = shouldStar
+    ? supabase
+        .from("stars")
+        .insert({ user_id: userId, media_entry_id: entryId })
+    : supabase
+        .from("stars")
+        .delete()
+        .eq("user_id", userId)
+        .eq("media_entry_id", entryId);
+  const { error } = await query;
+
+  if (error) {
+    return {
+      error: `I couldn't ${shouldStar ? "star" : "unstar"} that title. Please try again.`,
+    };
+  }
+
+  revalidatePath("/library");
+  revalidatePath("/library/starred");
+  revalidatePath(`/library/${entryId}`);
+
+  return {
+    isStarred: shouldStar,
+    message: shouldStar ? "Added to your starred titles." : "Removed from your starred titles.",
   };
 }
 

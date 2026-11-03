@@ -5,11 +5,12 @@ import { connection } from "next/server";
 import type { MediaEntry } from "@/lib/library";
 import { genreName, statusClasses } from "@/lib/library";
 import { createClient } from "@/lib/supabase/server";
-import { deleteEntry, updateWatchStatus } from "../actions";
+import { deleteEntry, updateStar, updateWatchStatus } from "../actions";
 import { DeleteEntryForm } from "../delete-entry-form";
 import { WatchStatusForm } from "../watch-status-form";
 import { DesertLineArt } from "@/components/line-art";
 import { TvRatingDisplay } from "@/components/tv-rating";
+import { StarToggleForm } from "../star-toggle-form";
 
 async function EntryDetailContent({
   params,
@@ -19,13 +20,20 @@ async function EntryDetailContent({
   const query = await searchParams;
   await connection();
   const supabase = await createClient();
-  const { data } = await supabase
-    .from("media_entries")
-    .select(
-      "id, title, media_type, watch_status, streaming_service, rating, review, genre_id, created_at, updated_at, genres(name)",
-    )
-    .eq("id", id)
-    .maybeSingle();
+  const [{ data }, { data: star }] = await Promise.all([
+    supabase
+      .from("media_entries")
+      .select(
+        "id, title, media_type, watch_status, streaming_service, rating, review, genre_id, created_at, updated_at, genres(name)",
+      )
+      .eq("id", id)
+      .maybeSingle(),
+    supabase
+      .from("stars")
+      .select("media_entry_id")
+      .eq("media_entry_id", id)
+      .maybeSingle(),
+  ]);
 
   if (!data) {
     redirect("/library");
@@ -34,6 +42,7 @@ async function EntryDetailContent({
   const entry = data as MediaEntry;
   const deleteAction = deleteEntry.bind(null, entry.id);
   const statusAction = updateWatchStatus.bind(null, entry.id);
+  const starAction = updateStar.bind(null, entry.id);
 
   return (
     <section className="mx-auto max-w-4xl">
@@ -46,15 +55,23 @@ async function EntryDetailContent({
       <article className="mt-6 overflow-hidden rounded-[2rem] bg-[#fff1d6] text-[#261b2a] shadow-2xl">
         <div className="h-3 bg-[linear-gradient(90deg,#6e3b5d_0%,#d65a4a_50%,#f6c85f_100%)]" />
         <div className="p-7 sm:p-11">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="rounded-full bg-[#6e3b5d]/10 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-[#6e3b5d]">
-              {entry.media_type}
-            </span>
-            <span
-              className={`rounded-full px-3 py-1 text-xs font-bold ${statusClasses(entry.watch_status)}`}
-            >
-              {entry.watch_status}
-            </span>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="rounded-full bg-[#6e3b5d]/10 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-[#6e3b5d]">
+                {entry.media_type}
+              </span>
+              <span
+                className={`rounded-full px-3 py-1 text-xs font-bold ${statusClasses(entry.watch_status)}`}
+              >
+                {entry.watch_status}
+              </span>
+            </div>
+            <StarToggleForm
+              action={starAction}
+              initiallyStarred={Boolean(star)}
+              title={entry.title}
+              showMessage
+            />
           </div>
           <h1 className="mt-7 max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">
             {entry.title}

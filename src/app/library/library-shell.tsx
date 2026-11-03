@@ -52,6 +52,12 @@ export async function LibraryShell({ children }: { children: React.ReactNode }) 
               >
                 Add a title
               </Link>
+              <Link
+                href="/library/starred"
+                className="rounded-full px-4 py-2 text-sm font-bold text-[#fff1d6] transition hover:bg-[#fff1d6]/10"
+              >
+                Starred
+              </Link>
             </nav>
           </div>
 
