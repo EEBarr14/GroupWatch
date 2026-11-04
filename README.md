@@ -35,4 +35,4 @@ npm run dev
 
 ## Project status
 
-The full project plan is in [PLAN.md](./PLAN.md). The database tables and relationships are documented in [schema.md](./schema.md).
+The full project plan is in [PLAN.md](./PLAN.md). The database tables and relationships are documented in [schema.md](./schema.md), and my assignment reflection is in [REFLECTION.md](./REFLECTION.md).

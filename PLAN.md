@@ -134,15 +134,17 @@ I will complete this table after the application is built without rewriting the 
 
 | Planned feature | Shipped / Changed / Cut | Status (Done/Backlogged) | Learning | What changed and why |
 | --- | --- | --- | --- | --- |
-| Sign up and login | To be completed | Backlogged | To be completed | To be completed |
-| Account-owned data model | To be completed | Backlogged | To be completed | To be completed |
-| Library CRUD | To be completed | Backlogged | To be completed | To be completed |
-| Friendly validation | To be completed | Backlogged | To be completed | To be completed |
-| Watch status | To be completed | Backlogged | To be completed | To be completed |
-| Ratings and reviews | To be completed | Backlogged | To be completed | To be completed |
-| Stars | To be completed | Backlogged | To be completed | To be completed |
-| Find and sort | To be completed | Backlogged | To be completed | To be completed |
-| Dashboard | To be completed | Backlogged | To be completed | To be completed |
-| Public share page | To be completed | Backlogged | To be completed | To be completed |
+| Sign up and login | Changed | Done | Account access includes the moments after signup, not only the first login. | I shipped signup, login, logout, password recovery, and password visibility after testing showed that checking a typed password mattered. |
+| Account-owned data model | Shipped | Done | Row Level Security was easier to trust because ownership rules lived in the database. | The four planned tables and relationships shipped; I later added an optional streaming-service column. |
+| Library CRUD | Changed | Done | A feature branch becomes harder to explain when visual work and account work are added during review. | CRUD shipped, but the PR also grew to include streaming location, password recovery, and the line-art design. Optional start and finish dates stayed in the database but were cut from the interface. |
+| Friendly validation | Shipped | Done | Preserving form values makes an error feel fixable instead of punishing. | Required fields now show specific messages without clearing the rest of the form. |
+| Watch status | Shipped | Done | A small shortcut can make an existing field much more useful. | In addition to the add and edit forms, status can be changed directly from an entry detail page. |
+| Ratings and reviews | Shipped | Done | A familiar interaction can still feel specific to the product. | Ratings use one through five TV icons instead of stars, with an optional review limited to 500 characters. |
+| Stars | Shipped | Done | The junction table kept favorites simple and account-owned. | Users can star from a card or detail page and open a dedicated Starred view. |
+| Find and sort | Shipped | Done | Keeping choices in the URL makes search results easier to refresh and revisit. | Search, three filters, and three sort choices all shipped. |
+| Dashboard | Shipped | Done | A small number of useful totals told the story better than a crowded dashboard. | The dashboard shows four summary cards and a status chart, and its average-rating calculation has a red/green test. |
+| Public share page | Changed | Done | Public data needs a narrower contract than private data. | The read-only link shipped through a limited database function. Reviews, click-through details, and conversation remain private or backlogged after user testing. |
+| Required tests | Shipped | Done | Intentionally seeing a test fail made its protection much clearer. | Both the dashboard average and cross-account data-isolation tests include plain-English explanations and red/green evidence. |
+| Unplanned connection polish | Shipped | Done | The clearest message focused on why I wanted to share a watchlist in the first place. | Stranger testing led to password visibility, and the homepage now centers the idea of staying connected. |
 
-Reflection note for Library CRUD: I considered pulling poster artwork automatically, but that would require an outside movie database, API credentials, title matching, and attribution. I kept the text-based cards from my original scope instead. This is one place where the finished app will feel less visual than I first imagined, but it avoids adding a fragile dependency before the required features are complete.
+Reflection note for Library CRUD: I considered pulling poster artwork automatically, but that would require an outside movie database, API credentials, title matching, and attribution. I kept the text-based cards from my original scope instead. This is one place where the finished app feels less visual than an app backed by a media API, but it avoids adding a fragile dependency before the required features are complete.
