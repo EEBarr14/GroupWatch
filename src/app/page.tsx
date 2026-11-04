@@ -13,11 +13,12 @@ export default function Home() {
         <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
             <h1 className="text-5xl font-semibold leading-[1.05] tracking-tight text-[#fff1d6] sm:text-7xl">
-              Your watchlist, with a little more personality.
+              Stay connected.
             </h1>
             <p className="mt-7 max-w-2xl text-lg leading-8 text-[#fff1d6]/80 sm:text-xl">
-              Keep track of the shows and movies you want to watch, what you are
-              watching now, and what you actually thought when you finished.
+              We all watch something. GroupWatch turns those everyday moments
+              into a way to stay connected—across miles, schedules, and time
+              zones. Share what you love with the people you love.
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Link
