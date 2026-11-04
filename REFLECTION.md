@@ -4,7 +4,19 @@
 
 The biggest gap between my original plan and what I shipped was not a missing feature but how well I followed my own feature boundaries. My [original feature loop](https://github.com/EEBarr14/GroupWatch/blob/0fa4e8e959de3a631db134bf93df8bbf4e2bd530/PLAN.md#L9-L24) says that every feature would have its own issue, branch, prompt log, pull request, merge, and deployment. It describes Library CRUD—Create, Read, Update, and Delete—as adding, viewing, editing, and deleting a title. “CRUD” was assignment language I would not have used on my own. One useful role of the agent was describing terms like this in plain language, so I could connect them to actual GroupWatch actions instead of treating them like unexplained technical requirements. In reality, [PR #8](https://github.com/EEBarr14/GroupWatch/pull/8) also added an optional viewing service, the full password-recovery flow, and the line-art visual system.
 
-The trail is visible in my [Library CRUD prompt log](./prompts/library-crud.md). The first prompt stayed focused: “Add a private, Supabase-backed library where a signed-in user can create a movie or TV show entry, view their library, open an entry's details, edit it, and delete it after confirming.” My follow-up changed the scope: “During visual review, add original continuous-line illustrations” and “also add a complete password recovery flow.” The recorded agent result says the finished branch included the add, view, edit, and delete flow, viewing service, password recovery, and original line art. The PR description confirms the same result, including, “I also added the desert sunrise line art and carried the color palette through the landing, account, and library pages.” I thought my PRs were much cleaner in this assignment than the Team GitHub assignment, which was my first real foray into GitHub PRs, but they were still a bit overbroad.
+The evidence trail is visible in my [Library CRUD prompt log](./prompts/library-crud.md). My first prompt stayed focused:
+
+> **My original prompt:** “Add a private, Supabase-backed library where a signed-in user can create a movie or TV show entry, view their library, open an entry's details, edit it, and delete it after confirming.”
+
+Then my follow-up changed the scope:
+
+> **My follow-up prompt:** “During visual review, add original continuous-line illustrations” and “also add a complete password recovery flow.”
+
+The saved agent response records what actually shipped:
+
+> **Agent result:** “The finished branch added the private create, read, update, and delete flow, an optional viewing-service field, password recovery, and original line art across the signed-in experience.”
+
+The description for [PR #8](https://github.com/EEBarr14/GroupWatch/pull/8) supplies another timestamped record: “I also added the desert sunrise line art and carried the color palette through the landing, account, and library pages.” I thought my PRs were much cleaner in this assignment than the Team GitHub assignment, which was my first real foray into GitHub PRs, but they were still a bit overbroad.
 
 However, adding more to a PR was my decision, not the agent quietly changing the project. I know because the extra work appears in my follow-up prompt. Once I could use the first version in a browser, the plain screens felt less personal and too AI-generated, and password recovery felt important enough to address immediately. I decided to address the issue immediately and in the same branch, and directed the agent to do the same.
 
